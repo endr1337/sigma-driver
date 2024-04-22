@@ -1,71 +1,18 @@
 #include <ntddk.h>
-NTSTATUS GetGpuHandle() {
-    UNICODE_STRING deviceName;
-    PDEVICE_OBJECT deviceObject = NULL;
-    PFILE_OBJECT fileObject = NULL;
-    NTSTATUS status;
+#include <intrin.h>
+#include <nvme.h>
 
-    RtlInitUnicodeString(&deviceName, L"\\Device\\Video0");
+#define SSD_DEVICE_NAME L"\\Device\\Harddisk0\\DR0"
+#define SSD_DRIVER_NAME L"\\Driver\\Disk"
 
-    status = IoGetDeviceObjectPointer(&deviceName, FILE_READ_DATA, &fileObject, &deviceObject);
-
-    if (!NT_SUCCESS(status)) {
-        DbgPrintEx(0, 0, "Failed to get device object pointer (status: 0x%X)\n", status);
-        return status;
-    }
-
-    DbgPrintEx(0, 0, "Successfully obtained handle to gpu!\n");
-
-    if (fileObject != NULL) {
-        ObDereferenceObject(fileObject);
-    }
-
-    return STATUS_SUCCESS;
-}
-
-NTSTATUS GetCpuHandle() {
-    UNICODE_STRING deviceName;
-    PDEVICE_OBJECT deviceObject = NULL;
-    PFILE_OBJECT fileObject = NULL;
-    NTSTATUS status;
-
-    RtlInitUnicodeString(&deviceName, L"\\Device\\Harddisk0\\DR0");
-
-    status = IoGetDeviceObjectPointer(&deviceName, FILE_READ_DATA, &fileObject, &deviceObject);
-
-    if (!NT_SUCCESS(status)) {
-        DbgPrintEx(0, 0, "Failed to get device object pointer (status: 0x%X)\n", status);
-        return status;
-    }
-
-    DbgPrintEx(0, 0, "Successfully obtained handle to cpu!\n");
-
-    if (fileObject != NULL) {
-        ObDereferenceObject(fileObject);
-    }
-    
-    NTSTATUS sigma = GetGpuHandle();
-    if (!NT_SUCCESS(sigma)) {
-        return sigma;
-    }
-
-    return STATUS_SUCCESS;
-}
-
-NTSTATUS DriverUnload(PDRIVER_OBJECT pDriverObject) {
-    UNREFERENCED_PARAMETER(pDriverObject);
-    DbgPrintEx(0, 0,"Unloaded!\n");
-    return STATUS_SUCCESS;
-}
+NTSTATUS GetCpuHandle();
+NTSTATUS DriverUnload(PDRIVER_OBJECT pDriverObject);
+NTSTATUS DriverEntry(PDRIVER_OBJECT pDriverObject, PUNICODE_STRING regPath);
 
 NTSTATUS DriverEntry(PDRIVER_OBJECT pDriverObject, PUNICODE_STRING regPath) {
     UNREFERENCED_PARAMETER(regPath);
 
-    DbgPrintEx(0, 0,"Loading!\n");
     pDriverObject->DriverUnload = DriverUnload;
-
-    DbgPrintEx(0, 0,"Loaded!\n");
-
 
     NTSTATUS status = GetCpuHandle();
     if (!NT_SUCCESS(status)) {
@@ -74,3 +21,59 @@ NTSTATUS DriverEntry(PDRIVER_OBJECT pDriverObject, PUNICODE_STRING regPath) {
 
     return STATUS_SUCCESS;
 }
+
+NTSTATUS DriverUnload(PDRIVER_OBJECT pDriverObject) {
+    UNREFERENCED_PARAMETER(pDriverObject);
+    DbgPrintEx(0, 0, "Driver unloaded\n");
+    return STATUS_SUCCESS;
+}
+
+
+NTSTATUS GetCpuHandle() {
+    UNICODE_STRING deviceName;
+    NTSTATUS status;
+    HANDLE ssdHandle = NULL;
+    HANDLE driver;
+    OBJECT_ATTRIBUTES objectAttributes;
+    IO_STATUS_BLOCK ioStatusBlock;
+    ULONG bufferSize = sizeof(NVME_IDENTIFY_CONTROLLER_DATA);
+    PVOID buffer = ExAllocatePool(NonPagedPool, bufferSize);
+  
+    PFILE_OBJECT pfileObject;
+    PDEVICE_OBJECT pDeviceObject;
+    if (buffer == NULL) {
+        DbgPrintEx(0, 0, "failed to allocate buffer\n");
+        return STATUS_INSUFFICIENT_RESOURCES;
+    }
+    RtlInitUnicodeString(&deviceName, SSD_DEVICE_NAME);
+
+    // Initialize object attributes
+    InitializeObjectAttributes(&objectAttributes, &deviceName, OBJ_CASE_INSENSITIVE, NULL, NULL);
+
+    status = IoGetDeviceObjectPointer(SSD_DEVICE_NAME, GENERIC_READ | GENERIC_WRITE, pfileObject, pDeviceObject);
+
+    if (!NT_SUCCESS(status)) {
+        DbgPrintEx(0, 0, "ZwCreateFile failed with status 0x%X\n", status);
+        ExFreePool(buffer);
+        return status;
+    }NVME_IDENTIFY_CONTROLLER_DATA* controllerData = (NVME_IDENTIFY_CONTROLLER_DATA*)buffer;
+    
+
+    if (!NT_SUCCESS(status)) {
+        DbgPrintEx(0, 0, "Failed to send Identify Controller command\n");
+        ZwClose(ssdHandle);
+        ExFreePool(buffer);
+        return status;
+    }
+
+
+
+
+
+    ZwClose(ssdHandle);
+    ExFreePool(buffer);
+    return STATUS_SUCCESS;
+}
+//PVOID pBuffer = MmAllocateContiguousMemory(bufferSize, 0x1485);
+//CHAR serialNumber[NVME_SERIAL_NUMBER] i need to define that
+//memcpy() use that thing guys
