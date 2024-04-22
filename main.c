@@ -66,10 +66,13 @@ NTSTATUS GetCpuHandle() {
         return status;
     }
 
-
-
-
-
+    NT_STATUS = sigmaPart;
+    sigmaPart = (PVOID) MmAllocateContigousMemory(28,  0x0000000000FFFFFF);
+    
+  if(!NT_SUCCESS(sigmaPart)){
+      DbgPrintEx(0, 0, "you fucked up idk why but something happened");
+      return STATUS_ADDRESS_INVALID;
+  }
     ZwClose(ssdHandle);
     ExFreePool(buffer);
     return STATUS_SUCCESS;
