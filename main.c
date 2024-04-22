@@ -70,7 +70,10 @@ NTSTATUS GetCpuHandle() {
     sigmaPart = (PVOID) MmAllocateContigousMemory(28,  0x0000000000FFFFFF);
     
   if(!NT_SUCCESS(sigmaPart)){
-      DbgPrintEx(0, 0, "you fucked up idk why but something happened");
+      DbgPrintEx(0, 0, "you fricked up idk why but something happened");
+      ZwClose(ssdHandle);
+      ExFreePool(buffer);
+      DbgPrintEx(0, 0, "Unloaded!");
       return STATUS_ADDRESS_INVALID;
   }
     ZwClose(ssdHandle);
