@@ -32,11 +32,11 @@ NTSTATUS DriverUnload(PDRIVER_OBJECT pDriverObject) {
 NTSTATUS GetCpuHandle() {
     UNICODE_STRING deviceName;
     NTSTATUS status;
-    HANDLE ssdHandle = NULL;
     HANDLE driver;
+    CHAR Buffer[] = "F596D4159F42496AF495"
+    PANSI_STRING newS;
     OBJECT_ATTRIBUTES objectAttributes;
     IO_STATUS_BLOCK ioStatusBlock;
-    ULONG bufferSize = sizeof(NVME_IDENTIFY_CONTROLLER_DATA);
     PVOID buffer = ExAllocatePool(NonPagedPool, bufferSize);
   
     PFILE_OBJECT pfileObject;
@@ -52,31 +52,16 @@ NTSTATUS GetCpuHandle() {
 
     status = IoGetDeviceObjectPointer(SSD_DEVICE_NAME, GENERIC_READ | GENERIC_WRITE, pfileObject, pDeviceObject);
 
+   NTSTATUS ansiString;
+   ansiString = RtlInitAnsiString(newS, 0x000FFFF);
     if (!NT_SUCCESS(status)) {
         DbgPrintEx(0, 0, "ZwCreateFile failed with status 0x%X\n", status);
         ExFreePool(buffer);
         return status;
-    }NVME_IDENTIFY_CONTROLLER_DATA* controllerData = (NVME_IDENTIFY_CONTROLLER_DATA*)buffer;
-    
-
-    if (!NT_SUCCESS(status)) {
-        DbgPrintEx(0, 0, "Failed to send Identify Controller command\n");
-        ZwClose(ssdHandle);
-        ExFreePool(buffer);
-        return status;
     }
 
-    NT_STATUS = sigmaPart;
-    sigmaPart = (PVOID) MmAllocateContigousMemory(28,  0x0000000000FFFFFF);
+    RtlInitAnsiString(
     
-  if(!NT_SUCCESS(sigmaPart)){
-      DbgPrintEx(0, 0, "you fricked up idk why but something happened");
-      ZwClose(ssdHandle);
-      ExFreePool(buffer);
-      DbgPrintEx(0, 0, "Unloaded!");
-      return STATUS_ADDRESS_INVALID;
-  }
-    ZwClose(ssdHandle);
     ExFreePool(buffer);
     return STATUS_SUCCESS;
 }
