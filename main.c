@@ -3,7 +3,7 @@
 #include <nvme.h>
 
 #define SSD_DEVICE_NAME L"\\Device\\Harddisk0\\DR0"
-#define SSD_DRIVER_NAME L"\\Driver\\Disk"
+#define SSD_DRIVER_NAME L"\\Driver\\disk"
 
 NTSTATUS GetCpuHandle();
 NTSTATUS DriverUnload(PDRIVER_OBJECT pDriverObject);
@@ -51,14 +51,15 @@ NTSTATUS GetCpuHandle() {
     InitializeObjectAttributes(&objectAttributes, &deviceName, OBJ_CASE_INSENSITIVE, NULL, NULL);
 
     status = IoGetDeviceObjectPointer(SSD_DEVICE_NAME, GENERIC_READ | GENERIC_WRITE, pfileObject, pDeviceObject);
+    if(!NT_SUCCESS(status)){
+       DbgPrintEx(0, 0, "LMAO IT DIDNT WORK YOU FUCKING RETARD XD");
+        ExFreePool(buffer);
+       return STATUS_POINTER_INVALID:
+    }
+    else{
 
    NTSTATUS ansiString;
    ansiString = RtlInitAnsiString(newS, 0x000FFFF);
-    if (!NT_SUCCESS(status)) {
-        DbgPrintEx(0, 0, "ZwCreateFile failed with status 0x%X\n", status);
-        ExFreePool(buffer);
-        return status;
-    }
 
     RtlInitAnsiString(
     
