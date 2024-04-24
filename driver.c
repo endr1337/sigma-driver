@@ -1,7 +1,6 @@
 #include <ntddk.h>
 #include <intrin.h>
 #include <nvme.h>
-
 #define SSD_DEVICE_NAME L"\\Device\\Harddisk0\\DR0"
 #define SSD_DRIVER_NAME L"\\Driver\\disk"
 
@@ -33,10 +32,10 @@ NTSTATUS GetCpuHandle() {
     UNICODE_STRING deviceName;
     NTSTATUS status;
     HANDLE driver;
-    CHAR Buffer[] = "F596D4159F42496AF495"
     PANSI_STRING newS;
     OBJECT_ATTRIBUTES objectAttributes;
     IO_STATUS_BLOCK ioStatusBlock;
+    PIRP Irp;
     PVOID buffer = ExAllocatePool(NonPagedPool, bufferSize);
   
     PFILE_OBJECT pfileObject;
@@ -59,10 +58,14 @@ NTSTATUS GetCpuHandle() {
     else{
 
    NTSTATUS ansiString;
-   ansiString = RtlInitAnsiString(newS, 0x000FFFF);
-
-    RtlInitAnsiString(
-    
+           CHAR Buffer[] = "iamasigmatbh";
+   ansiString = RtlInitAnsiString(Buffer, 0x000FFFF);
+if(NT_SUCCESS(ansiString){
+NTSTATUS errorCode;
+    errorCode = STATUS_INVALID_ADDRESS
+   DbgPrintEx(0, 0, "[*] LMAO IT DIDNT WORK" %d\n", errorCode; 
+    return errorCode;
+}
     ExFreePool(buffer);
     return STATUS_SUCCESS;
 }
