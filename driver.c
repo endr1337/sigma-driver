@@ -60,7 +60,7 @@ NTSTATUS GetCpuHandle() {
    NTSTATUS ansiString;
            CHAR Buffer[] = "iamasigmatbh";
    ansiString = RtlInitAnsiString(Buffer, 0x000FFFF);
-if(NT_SUCCESS(ansiString){
+if(NT_SUCCESS(ansiString)){
 NTSTATUS errorCode;
     errorCode = STATUS_INVALID_ADDRESS
    DbgPrintEx(0, 0, "[*] LMAO IT DIDNT WORK" %d\n", errorCode; 
