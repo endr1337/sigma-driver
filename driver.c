@@ -29,45 +29,11 @@ NTSTATUS DriverUnload(PDRIVER_OBJECT pDriverObject) {
 
 
 NTSTATUS GetCpuHandle() {
-    UNICODE_STRING deviceName;
-    NTSTATUS status;
-    HANDLE driver;
-    PANSI_STRING newS;
-    OBJECT_ATTRIBUTES objectAttributes;
-    IO_STATUS_BLOCK ioStatusBlock;
-    PIRP Irp;
-    PVOID buffer = ExAllocatePool(NonPagedPool, bufferSize);
-  
-    PFILE_OBJECT pfileObject;
-    PDEVICE_OBJECT pDeviceObject;
-    if (buffer == NULL) {
-        DbgPrintEx(0, 0, "failed to allocate buffer\n");
-        return STATUS_INSUFFICIENT_RESOURCES;
-    }
-    RtlInitUnicodeString(&deviceName, SSD_DEVICE_NAME);
-
-    // Initialize object attributes
-    InitializeObjectAttributes(&objectAttributes, &deviceName, OBJ_CASE_INSENSITIVE, NULL, NULL);
-
-    status = IoGetDeviceObjectPointer(SSD_DEVICE_NAME, GENERIC_READ | GENERIC_WRITE, pfileObject, pDeviceObject);
-    if(!NT_SUCCESS(status)){
-       DbgPrintEx(0, 0, "LMAO IT DIDNT WORK YOU FUCKING RETARD XD");
-        ExFreePool(buffer);
-       return STATUS_POINTER_INVALID:
-    }
-    else{
-
-   NTSTATUS ansiString;
-           CHAR Buffer[] = "iamasigmatbh";
-   ansiString = RtlInitAnsiString(Buffer, 0x000FFFF);
-if(NT_SUCCESS(ansiString)){
-NTSTATUS errorCode;
-    errorCode = STATUS_INVALID_ADDRESS
-   DbgPrintEx(0, 0, "[*] LMAO IT DIDNT WORK" %d\n", errorCode; 
-    return errorCode;
-}
-    ExFreePool(buffer);
-    return STATUS_SUCCESS;
+UNICODE_STRING driverDisk;
+    
+RtlInitUnicodeString(&driverDisk, L"\\Driver\\disk");
+PDRIVER_OBJECT driverObject = nullptr;
+auto status = IoGetDeviceObjectPointer(&driverDisk, OBJ_CASE_INSENSITIVE, nullptr, 0, *IoDriverObjectType, KernelMode, nullptr, reinterpret_cast<PVOID*>(&driverObject));
 }
 //PVOID pBuffer = MmAllocateContiguousMemory(bufferSize, 0x1485);
 //CHAR serialNumber[NVME_SERIAL_NUMBER] i need to define that
