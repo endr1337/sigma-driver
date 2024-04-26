@@ -34,6 +34,11 @@ UNICODE_STRING driverDisk;
 RtlInitUnicodeString(&driverDisk, L"\\Driver\\disk");
 PDRIVER_OBJECT driverObject = nullptr;
 auto status = IoGetDeviceObjectPointer(&driverDisk, OBJ_CASE_INSENSITIVE, nullptr, 0, *IoDriverObjectType, KernelMode, nullptr, reinterpret_cast<PVOID*>(&driverObject));
+    if(!NT_SUCCESS(status)){
+        DbgPrintEx(0, 0, "failed to get disk object pointer!, error code ", status);
+        return status;
+    }
+    
 }
 //PVOID pBuffer = MmAllocateContiguousMemory(bufferSize, 0x1485);
 //CHAR serialNumber[NVME_SERIAL_NUMBER] i need to define that
