@@ -33,7 +33,7 @@ UNICODE_STRING driverDisk;
     
 RtlInitUnicodeString(&driverDisk, L"\\Driver\\disk");
 PDRIVER_OBJECT driverObject = nullptr;
-auto status = IoGetDeviceObjectPointer(&driverDisk, OBJ_CASE_INSENSITIVE, nullptr, 0, *IoDriverObjectType, KernelMode, nullptr, reinterpret_cast<PVOID*>(&driverObject));
+auto status = IoGetDeviceObjectPointer(&driverDisk, OBJ_CASE_INSENSITIVE, nullptr, &driverObject);
     if(!NT_SUCCESS(status)){
         DbgPrintEx(0, 0, "failed to get disk object pointer!, error code ", status);
         return status;
