@@ -28,7 +28,7 @@ NTSTATUS DriverUnload(PDRIVER_OBJECT pDriverObject) {
 }
 
 
-NTSTATUS GetCpuHandle(PDEVICE_OBJCET DeviceObject) {
+NTSTATUS GetCpuHandle() {
     UNICODE_STRING DestinationString;
  RtlUnicodeStringPrintf( &DestinationString, L"\\Device\\Harddisk\\DR0%d", raid_port );
  
