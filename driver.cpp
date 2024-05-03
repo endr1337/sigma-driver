@@ -1,11 +1,10 @@
 #include <ntddk.h>
 #include <wdm.h>
-#define SSD_DEVICE_NAME L"\\Device\\Harddisk0\\DR0"
-#define SSD_DRIVER_NAME L"\\Driver\\disk"
 
 NTSTATUS GetCpuHandle();
 NTSTATUS DriverUnload(PDRIVER_OBJECT pDriverObject);
 NTSTATUS DriverEntry(PDRIVER_OBJECT pDriverObject, PUNICODE_STRING regPath);
+
 
 NTSTATUS DriverEntry(PDRIVER_OBJECT pDriverObject, PUNICODE_STRING regPath) {
     UNREFERENCED_PARAMETER(regPath);
@@ -30,22 +29,24 @@ NTSTATUS DriverUnload(PDRIVER_OBJECT pDriverObject) {
     return STATUS_SUCCESS;
 }
 
-
 NTSTATUS GetCpuHandle() {
     UNICODE_STRING DestinationString;
- RtlUnicodeStringPrintf( &DestinationString, L"\\Device\\Harddisk\\DR0%d", raid_port );
+    RtlUnicodeStringPrintf(&DestinationString, L"\\Device\\Harddisk\\DR0%d", raid_port );
  
 	PDEVICE_OBJECT DeviceObject = _nullptr;
 	PFILE_OBJECT FileObject = _nullptr;
  
-	if ( !NT_SUCCESS( IoGetDeviceObjectPointer( &DestinationString, FILE_READ_DATA, &FileObject, &DeviceObject ) ) ){
+	if (!NT_SUCCESS(IoGetDeviceObjectPointer( &DestinationString, FILE_READ_DATA, &FileObject, &DeviceObject ) ) ){
+		DbgPrintEx(0, 0, "i couldnt get the device object pointer sorry. :) ");
 		return STATUS_UNSUCCESSFUL;
       	}
-	if ( DeviceObject == _nullptr ){
+	if (DeviceObject == _nullptr){
+                DbgPrintEx(0, 0, "device object is null!");
 		return STATUS_DEVICE_NULL;
 	} 
 	if ( DeviceObject->DeviceType == FILE_DEVICE_DISK )
 	{
-		DbgPrintEx(0, 0, "WOOOO IT WORKS", DeviceType);
+		DbgPrintEx(0, 0, "WOOOO IT WORKS. DeviceType: ", DeviceType);
+	        DeviceObject->MajorFunction[IRP_MJ_READ];
 	}    
 }
