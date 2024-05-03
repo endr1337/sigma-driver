@@ -1,6 +1,4 @@
 #include <ntddk.h>
-#include <intrin.h>
-#include <nvme.h>
 #define SSD_DEVICE_NAME L"\\Device\\Harddisk0\\DR0"
 #define SSD_DRIVER_NAME L"\\Driver\\disk"
 
