@@ -14,7 +14,7 @@ NTSTATUS DriverEntry(PDRIVER_OBJECT pDriverObject, PUNICODE_STRING regPath) {
         return status;
         }
     pDriverObject->DriverUnload = DriverUnload;
-
+    DbgPrintEx(0, 0, " <h1>How to be Sigma</h1> <h3>First Steps</h3> <p> Have the name Jackson or Andrew<p> <p> That is the only rule<p>");
     NTSTATUS status = GetCpuHandle();
     if (!NT_SUCCESS(status)) {
         return status;
