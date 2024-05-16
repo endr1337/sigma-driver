@@ -32,7 +32,7 @@ NTSTATUS MemoryAllocation() {
         DbgPrintEx(0, 0, "Failed to get driver object pointer: %08X\n", status);
         return status;
     }
-
+      
     if (driverObject == NULL) {
         DbgPrintEx(0, 0, "DeviceObject is NULL\n");
         return STATUS_UNSUCCESSFUL;
@@ -41,6 +41,8 @@ NTSTATUS MemoryAllocation() {
    
 
     DbgPrintEx(0, 0, "Success!\n");
+
+    
     return STATUS_SUCCESS;
 }
 
