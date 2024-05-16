@@ -24,18 +24,16 @@ NTSTATUS ObReferenceObjectByName(
 NTSTATUS MemoryAllocation() {
     WCHAR diskNumber[] = L"0";
     UNICODE_STRING diskString;
-    RtlInitUnicodeString(&diskString, L"\\Device\\PhysicalDrive%d");
-    RtlUnicodeStringPrintf(&diskString, L"\\Device\\PhysicalDrive%s", diskNumber); // Concatenate the disk number
+    RtlInitUnicodeString(&diskString, L"\\Driver\\Disk");
 
-    PDEVICE_OBJECT DeviceObject = NULL;
-    PFILE_OBJECT FileObject = NULL;
-    NTSTATUS status = IoGetDeviceObjectPointer(&diskString, FILE_READ_DATA, &FileObject, &DeviceObject);
+    PDRIVER_OBJECT driverObject
+    NTSTATUS status = ObReferenceObjectByName(&diskstring, OBJ_CASE_INSENSITIVE, 0, NULL, *IoDriverObjectType, (PVOID)&driverObject);
     if (!NT_SUCCESS(status)) {
-        DbgPrintEx(0, 0, "Failed to get device object pointer: %08X\n", status);
+        DbgPrintEx(0, 0, "Failed to get driver object pointer: %08X\n", status);
         return status;
     }
 
-    if (DeviceObject == NULL) {
+    if (driverObject == NULL) {
         DbgPrintEx(0, 0, "DeviceObject is NULL\n");
         return STATUS_UNSUCCESSFUL;
     }
