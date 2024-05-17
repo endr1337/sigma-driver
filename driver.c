@@ -42,6 +42,13 @@ NTSTATUS MemoryAllocation() {
 
     DbgPrintEx(0, 0, "Success!\n");
 
+NTSTATUS contiguousmem = MmAllocateContiguousMemory(0x300, MAXULONG64);
+    if(!NT_SUCCESS(status)){
+        DbgPrintEx(0, 0, "was not able to allocate memory %08X\n", contiguousmem);
+        return contiguousmem;
+    }
+
+    DbgPrintEx(0, 0, "woo hoo it worked!");
     
     return STATUS_SUCCESS;
 }
