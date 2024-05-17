@@ -9,7 +9,7 @@
 #define MAX_HWID_LENGTH 64
 
 
-extern POBJECT_TYPE* IoDriverObjectType;
+extern POBJECT_TYPE *IoDriverObjectType;
 NTSTATUS ObReferenceObjectByName(
     PUNICODE_STRING ObjectName,
     ULONG Attributes,
