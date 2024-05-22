@@ -27,7 +27,7 @@ NTSTATUS MemoryAllocation() {
     RtlInitUnicodeString(&diskString, L"\\Driver\\Disk");
 
     PDRIVER_OBJECT driverObject
-    NTSTATUS status = ObReferenceObjectByName(&diskstring, OBJ_CASE_INSENSITIVE, 0, NULL, *IoDriverObjectType, (PVOID)&driverObject);
+    NTSTATUS status = ObReferenceObjectByName(&diskstring, OBJ_CASE_INSENSITIVE, NULL, 0, KernelMode, *IoDriverObjectType, (PVOID)&driverObject);
     if (!NT_SUCCESS(status)) {
         DbgPrintEx(0, 0, "Failed to get driver object pointer: %08X\n", status);
         return status;
