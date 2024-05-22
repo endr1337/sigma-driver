@@ -48,7 +48,7 @@ NTSTATUS contiguousmem = MmAllocateContiguousMemory(0x300, MAXULONG64);
         return contiguousmem;
     }
 
-    DbgPrintEx(0, 0, "woo hoo it worked!");
+    DbgPrintEx(0, 0, "memory allocated at address: ", contiguousmem);
     
     return STATUS_SUCCESS;
 }
