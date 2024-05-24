@@ -21,12 +21,10 @@ NTSTATUS ObReferenceObjectByName(
     PVOID* Object
 );
 
-NTSTATUS MemoryAllocation() {
-    WCHAR diskNumber[] = L"0";
+NTSTATUS MemoryAllocation(PIRP irp,  PDRIVER_OBJECT driverObject) {
     UNICODE_STRING diskString;
     RtlInitUnicodeString(&diskString, L"\\Driver\\Disk");
 
-    PDRIVER_OBJECT driverObject
     NTSTATUS status = ObReferenceObjectByName(&diskstring, OBJ_CASE_INSENSITIVE, NULL, 0, KernelMode, *IoDriverObjectType, (PVOID)&driverObject);
     if (!NT_SUCCESS(status)) {
         DbgPrintEx(0, 0, "Failed to get driver object pointer: %08X\n", status);
@@ -49,6 +47,8 @@ NTSTATUS contiguousmem = MmAllocateContiguousMemory(0x300, MAXULONG64);
     }
 
     DbgPrintEx(0, 0, "memory allocated at address: ", contiguousmem);
+
+    
     
     return STATUS_SUCCESS;
 }
